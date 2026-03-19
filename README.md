@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔬 Advanced Spatial-Omics Pipeline
+# 🔬 Spatial-Omics Pipeline
 
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)](#)
 [![Biotech](https://img.shields.io/badge/Field-Spatial_Proteomics-blue?style=flat-square)](#)
