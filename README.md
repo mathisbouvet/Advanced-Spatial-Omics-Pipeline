@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔬 Advanced Spatial-Omics Pipeline
+# 🔬 Spatial-Omics Pipeline
 
 [![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)](#)
 [![Biotech](https://img.shields.io/badge/Field-Spatial_Proteomics-blue?style=flat-square)](#)
@@ -48,6 +48,17 @@ The protocol described in [`Comparison of clusters.md`](Comparison%20of%20cluste
 - **Dimensionality Reduction (PCA)**: Projection preserving 90% of protein variance.  
 - **Automatic K Selection**: Consensus strategy combining **Silhouette**, **Davies–Bouldin**, and **Calinski–Harabasz** indices.  
 - **Stability Analysis (ARI)**: Robustness evaluation via 80% bootstrapping using the **Adjusted Rand Index**.
+
+### III. Marker Co-expression & Correlation Analysis (MACSima)
+
+> **Problem:** How to statistically validate biological signatures and distinguish true co-expression from background noise in cyclic imaging?
+
+The protocol described in [`Marker correlation analysis.md`](Marker%20correlation%20analysis.md) focuses on:
+
+* **Multi-Parametric Correlation**: Comparative analysis using **Pearson**, **Spearman**, and **Kendall** coefficients to evaluate both linear and non-linear relationships between markers.
+* **Robustness to Artifacts**: Use of rank-based correlations to minimize the impact of fluorescence saturation and non-specific background noise frequently encountered in MACSima data.
+* **Statistical Significance Mapping**: Implementation of a dynamic threshold ($r > 0.30$) combined with **p-value** filtering (from $*$ to $***$) to identify robust phenotypic signatures.
+* **Sensitivity Assessment**: Evaluation of how segmentation precision and tissue heterogeneity influence correlation coefficients, ensuring that co-expression reflects true biology rather than segmentation leakage.
 
 ---
 
