@@ -49,6 +49,8 @@ The protocol described in [`Comparison of clusters.md`](Comparison%20of%20cluste
 - **Automatic K Selection**: Consensus strategy combining **Silhouette**, **Davies–Bouldin**, and **Calinski–Harabasz** indices.  
 - **Stability Analysis (ARI)**: Robustness evaluation via 80% bootstrapping using the **Adjusted Rand Index**.
 
+---
+
 ### III. Marker Co-expression & Correlation Analysis (MACSima)
 
 > **Problem:** How to statistically validate biological signatures and distinguish true co-expression from background noise in cyclic imaging?
