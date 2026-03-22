@@ -7,24 +7,22 @@
   <br>
   <span style="font-size: 0.8em; font-style: italic;">Mars 2026</span>
 </div>
+<br>
 
 > **Note importante**
 > : Ce document ne contient aucune donnée réel
-
-
-<span style="background-color: #007acc; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">Issu d'une coupe tissulaire</span> <span style="background-color: #007acc; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">Code Python</span> <span style="background-color: #007acc; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">MACSima</span> <span style="background-color: #007acc; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">Segmentation</span>
 
 <div style="border: 1px solid #569cd6; border-radius: 10px; padding: 20px; background-color: rgba(86, 156, 214, 0.1); color: #000000;">
   <strong>La segmentation cellulaire</strong><br>
   Avant d'entamer une analyse spatiale, il est crucial d'obtenir une segmentation fidèle à la réalité biologique du tissu étudié. Si la segmentation manuelle demeure la méthode de référence en termes de précision, les contraintes temporelles imposent le recours à des outils automatisés. Des solutions telles que Cellpose, StarDist ou QuPath offrent désormais des segmentations de haute précision grâce au Deep Learning. Toutefois, ces outils se heurtent à certaines limites, notamment le risque de sur-apprentissage (overfitting) ou l'incapacité à généraliser face à la diversité des architectures tissulaires. L'exigence de segmentation diffère radicalement entre une coupe de testicule et une coupe d'ovaire, par exemple. Dès lors, il devient indispensable de développer des protocoles de validation rigoureux, où la segmentation automatique est confrontée à une "vérité terrain" (ground truth) établie manuellement, afin d'en quantifier la fiabilité.
 </div>
-<br>
 
 <h2 style="color: #000000; border-bottom: 1px solid #333; font-family: Georgia, serif;  font-weight: normal; padding-bottom: 5px; margin-top: 35px;">
   Objectif
 </h2>
 Ce document détaille les étapes de l'analyse de la segmentation cellulaire, s'appuyant sur des masques de régions d'intérêt (ROI) issus d'une segmentation manuelle, afin de les confronter aux résultats d'une segmentation automatisée
 
+<br>
 <br>
 
 <div style="border: 1px solid #d65323; border-radius: 10px; padding: 20px; background-color: rgba(213, 101, 45, 0.1); color: #000000;">
