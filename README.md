@@ -23,6 +23,15 @@ March 2026
 
 The workflow is structured into two main components: segmentation quality control and clustering-based phenotypic characterization.
 
+## Table of Contents
+- [Pipeline Architecture](#pipeline-architecture)
+  - [I. Segmentation Quality Control](#i-segmentation-quality-control)
+  - [II. Unsupervised Phenotypic Characterization](#ii-unsupervised-phenotypic-characterization)
+  - [III. Marker Co-expression & Correlation Analysis (MACSima)](#iii-marker-co-expression--correlation-analysis-macsima)
+  - [IV. Cellular Heterogeneity & Intensity Analysis](#iv-cellular-heterogeneity--intensity-analysis)
+  - [V. Morphological Correlation & Marker Intensity](#v-morphological-correlation--marker-intensity)
+- [Methodological Stack](#methodological-stack)
+
 
 
 ### I. Segmentation Quality Control
