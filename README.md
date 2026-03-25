@@ -76,6 +76,19 @@ The protocol described in [`Analysis of Cellular Heterogeneity by Cyclic Imaging
 - **Expression Visualization**: Utilization of combined boxplots and stripplots to map the distribution of cellular average intensities per biomarker.
 - **Biomarker Correlation**: Computation and heatmap visualization of intensity correlations across different markers to reveal co-expression networks.
 
+---
+
+### V. Morphological Correlation & Marker Intensity
+
+> **Problem:** How can we determine whether protein marker expression is proportional to cell volume or indicative of a size-independent phenotypic state?
+
+The protocol described in [`Comparative Analysis between Marker Intensity and Cell Size.md`](Comparative%20Analysis%20between%20Marker%20Intensity%20and%20Cell%20Size.md) focuses on:
+
+* **Statistical Evaluation**: Calculation of **Pearson correlation** coefficients and p-values to assess the linear relationship between marker intensity and cell size.
+* **Predictive Modeling**: Application of **simple linear regression** to quantify the direct influence and predictive power of specific markers on cellular morphology.
+* **Standardized Comparison**: Normalization of data using `StandardScaler` to allow unbiased, comparative regression analysis across multiple markers with varying expression scales.
+* **Methodological Expansion**: Framework considerations for future implementations, including **multiple regression** for combined marker effects and **Spearman correlation** for non-linear robustness.
+
 
 
 ## Methodological Stack

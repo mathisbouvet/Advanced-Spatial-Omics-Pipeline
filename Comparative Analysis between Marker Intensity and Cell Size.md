@@ -1,40 +1,41 @@
 <h1 style="color: #333; text-align: center; padding: 15px 0; border-top: 3px double #333; border-bottom: 3px double #333; font-family: Georgia, serif; font-style: italic; font-weight: normal; margin-top: 20px; margin-bottom: 30px;">
-  Analyse Comparative entre l'intensité des marqueurs et la taille cellulaire
+  Comparative Analysis between Marker Intensity and Cell Size
 </h1>
 
 <div style="text-align: center; font-family: Georgia, serif; font-size: 1.2em; color: #555; margin-top: -10px; margin-bottom: 30px;">
-  Par <strong>Mathis BOUVET</strong> — Biologiste spécialiste en Reproduction et Développement
+  By <strong>Mathis BOUVET</strong> — Biologist specializing in Reproduction and Development
   <br>
-  <span style="font-size: 0.8em; font-style: italic;">Mars 2026</span>
+  <span style="font-size: 0.8em; font-style: italic;">March 2026</span>
 </div>
+<br>
 
-> **Note importante**
-> : Ce document ne contient aucun donnée réel
+> **Important note**
+> : This document contains no real data
 
 
 <div style="border: 1px solid #569cd6; border-radius: 10px; padding: 20px; background-color: rgba(86, 156, 214, 0.1); color: #000000;">
-  <strong>Corrélation en cytométrie spatiale</strong><br>
-L'analyse de la relation entre l'intensité des marqueurs protéiques et les paramètres morphologiques (comme la taille des cellules) est cruciale pour comprendre le biais technique ou biologique. Dans le cadre de l'imagerie cyclique (MACSima), cette démarche permet de déterminer si l'expression d'une protéine est proportionnelle au volume cellulaire ou si elle caractérise un état phénotypique indépendant de la taille.
+  <strong>Correlation in spatial cytometry</strong><br>
+The analysis of the relationship between protein marker intensity and morphological parameters (such as cell size) is crucial for understanding technical or biological bias. In the context of cyclic imaging (MACSima), this approach makes it possible to determine whether protein expression is proportional to cell volume or whether it reflects a phenotypic state independent of size.
 </div>
 <br>
 <h2 style="color: #000000; border-bottom: 1px solid #333; font-family: Georgia, serif;  font-weight: normal; padding-bottom: 5px; margin-top: 35px;">
-  Objectif
+  Objective
 </h2>
 
-Ce pipeline vise à quantifier et visualiser l'influence de l'expression de marqueurs spécifiques sur la morphologie cellulaire. Le processus se décompose en trois étapes : l'évaluation statistique, la modélisation prédictive et la comparaison normalisée
+This pipeline aims to quantify and visualize the influence of specific marker expression on cell morphology. The process is divided into three steps: statistical evaluation, predictive modeling, and normalized comparison.
 
 <div style="border: 1px solid #d65323; border-radius: 10px; padding: 20px; background-color: rgba(213, 101, 45, 0.1); color: #000000;">
-  <strong>Importation des librairies</strong><br>
+  <strong>Importing libraries</strong><br>
 
 <details>
-  <summary><b>Afficher/masquer le code de configuration</b></summary>
+  <summary><b>Show/hide configuration code</b></summary>
 
 ```python
 import importlib
 import subprocess
 import sys
 
-# Dictionnaire des bibliothèques (Clé: nom du module, Valeur: nom du paquet pip)
+# Library Dictionary
 required_packages = {
     "sklearn": "scikit-learn",
     "pandas": "pandas",
@@ -44,81 +45,76 @@ required_packages = {
 }
 
 def install_and_import():
-    print("🔍 Analyse de l'environnement de travail...")
+    print("Analysis of the work environment...")
     for module_name, package_name in required_packages.items():
         try:
             importlib.import_module(module_name)
-            print(f"✅ {module_name} est déjà prêt.")
+            print(f"✅ {module_name} is already ready.")
         except ImportError:
-            print(f"⚠️ {module_name} manque. Installation de {package_name} en cours...")
+            print(f"⚠️ {module_name} lack. Installation of {package_name} en cours...")
             try:
                 subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
-                print(f"🚀 {package_name} installé avec succès !")
+                print(f"{package_name} installed successfully !")
             except Exception as e:
-                print(f"❌ Erreur lors de l'installation de {package_name} : {e}")
+                print(f"❌ Error during installation of {package_name} : {e}")
 
-# Exécution de la vérification
 install_and_import()
 
-
-
-# Importations spécifiques
+# Import
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from scipy.stats import pearsonr
 
-print("\n✨ Toutes les bibliothèques de statistiques et de prétraitement sont prêtes !")
+print("\n✨ All the libraries are ready !")
 ```
 </details>
 </div>
 
 
 
-## Objectif
+## Objective
 
-Ce script vise à étudier la relation entre l'intensité de différents marqueurs cellulaires et la taille des cellules. 
+This script aims to study the relationship between the intensity of different cellular markers and cell size.
 
 
 
-## 1 Chargement des données 
+## 1 Loading data
 
-Le script a été initialement pensé pour l'observation de 4 marqueurs : CD105, EGF Receptor, Insl3 et CYP17A1. Il peut néamoins convenir à n'importe quel marqueur qui interviendrait dans la taille cellulaire, voir dans d'autre paramètre morphologique de la cellule.
+The script was initially designed to analyze four markers: CD105, EGF Receptor, Insl3, and CYP17A1. However, it can be applied to any marker involved in cell size or other cellular morphological parameters.
 
 ```python
-data = pd.read_csv("[Fichier].csv")
+data = pd.read_csv("[Fill].csv")
 
-markers = ['(marqueur 1) Cell Intensity Average', '(marqueur 2) Cell Intensity Average',
-           '(marqueur 3) Cell Intensity Average', '(marqueur 4) Cell Intensity Average']
+markers = ['(marker 1) Cell Intensity Average', '(marker 2) Cell Intensity Average',
+           '(marker 3) Cell Intensity Average', '(marker 4) Cell Intensity Average']
 
-# Dictionnaire pour renommer les marqueurs
 marker_labels = {}
 
 labels_affiches = [marker_labels.get(m, m) for m in markers]
 ```
 
-## 2 Analyse de Corrélation
+## 2 Correlation Analysis
 
-Pour chaque marqueur, on calcule la corrélation de **Pearson** avec la taille cellulaire.
+For each marker, we calculate the **Pearson** correlation with cell size.
 
-#### Définition Mathématique
-La corrélation de Pearson est définie par :
+#### Mathematical definition
+Pearson's correlation is defined by:
 
 $$r = \frac{\text{cov}(X, Y)}{\sigma_X \sigma_Y}$$
 
-Où :
 * $r \in [-1, 1]$
-* **$r > 0$** : relation positive (les variables évoluent dans le même sens).
-* **$r < 0$** : relation négative (les variables évoluent en sens opposé).
-* **$r = 0$** : absence de relation linéaire.
+* **$r > 0$** : positive relationship (the variables evolve in the same direction).
+* **$r < 0$** : negative relationship (the variables evolve in opposite directions).
+* **$r = 0$** : absence of a linear relationship.
 
 #### Significativité Statistique
-La **p-value** teste l’hypothèse nulle suivante :
+The **p-value** tests the following null hypothesis:
 
 $$H_0 : r = 0$$
 
-> **Règle de décision :** Si $p < 0.05$, alors la corrélation est considérée comme **statistiquement significative**.
+> **Decision rule :** If $p < 0.05$, then the correlation is considered **statistically significant**.
 
 ```python
 correlations = []
@@ -126,12 +122,12 @@ p_values = []
 
 for marker in markers:
     intensity = data[marker]
-    cell_size = data['Cell Size'] #Ou autre caractéristique morphologique
+    cell_size = data['Cell Size'] # Or other morphological characteristic
     correlation, p_value = pearsonr(intensity, cell_size)
     correlations.append(correlation)
     p_values.append(p_value)
 
-    print(f'{marker}:\n  Corrélation de Pearson : {correlation:.4f}\n  P-value : {p_value:.4e}\n')
+    print(f'{marker}:\n  Pearson correlation : {correlation:.4f}\n  P-value : {p_value:.4e}\n')
 
 plt.figure(figsize=(9, 7))
 bars = plt.bar(range(len(markers)), correlations, color='#003049', edgecolor='black')
@@ -139,8 +135,8 @@ bars = plt.bar(range(len(markers)), correlations, color='#003049', edgecolor='bl
 plt.axhline(0, color='black', linestyle='--')
 
 plt.title(" ", color='black')
-plt.xlabel('Marqueurs', color='black')
-plt.ylabel('Corrélation de Pearson', color='black')
+plt.xlabel('markers', color='black')
+plt.ylabel('Pearson correlation', color='black')
 
 plt.xticks(ticks=range(len(markers)), labels=labels_affiches, rotation=45, ha='right', color='black')
 plt.yticks(color='black')
@@ -161,28 +157,28 @@ plt.grid(True, color='lightgrey', linestyle='--', linewidth=0.5)
 plt.tight_layout()
 plt.show()
 ```
-## 3. Régression linéaire 
+## 3. Linear regression
 
-Pour les marqueurs présentant une corrélation significative, une **régression linéaire simple** est ajustée afin de quantifier l'influence du marqueur sur la morphologie :
+For markers showing a significant correlation, a **simple linear regression** is fitted to quantify the influence of the marker on morphology:
 
 $$Y = \beta_0 + \beta_1 X + \varepsilon$$
 
-#### Paramètres du modèle :
-* **$Y$** : Variable dépendante (taille cellulaire).
-* **$X$** : Variable indépendante (intensité du marqueur).
-* **$\beta_0$** : L'ordonnée à l'origine (valeur de $Y$ quand $X = 0$).
-* **$\beta_1$** : Le coefficient de régression, représentant l'**effet du marqueur**. Une unité d'augmentation de $X$ entraîne une variation de $\beta_1$ unités de $Y$.
-* **$\varepsilon$** : Le terme d'erreur (résidus).
+#### Model parameters :
+* **$Y$** : Dependent variable (cell size).
+* **$X$** : Independent variable (marker intensity).
+* **$\beta_0$** : The y-intercept (value of $Y$ when $X = 0$).
+* **$\beta_1$** : The regression coefficient represents the **effect of the marker**. One unit increase in $X$ results in a change of $\beta_1$ units in $Y$.
+* **$\varepsilon$** : The term error (residues).
 
-> **Interprétation :** Le coefficient $\beta_1$ permet de déterminer si le marqueur est un prédicteur fort de la taille cellulaire.
+> **Interpretation :** The coefficient $\beta_1$ allows us to determine if the marker is a strong predictor of cell size.
 
 ```python
-data = pd.read_csv("[Fichier].csv")
+data = pd.read_csv("[Fill].csv")
 
-# Choix des marqueurs
-markers = ['(marqueur 1)', '(marqueur 2)']
+# Marker selection
+markers = ['(marker 1)', '(marker 2)']
 
-# Dictionnaire
+# Dictionary
 marker_labels = {}
 
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 6), facecolor='white')
@@ -199,11 +195,11 @@ for i, marker in enumerate(markers):
     axes[i].plot(X, y_pred, color='#9B59B6', label='Régression', linewidth=2)
 
     axes[i].set_title(
-        f'Influence de {marker_labels[marker]} sur la taille de la cellule\nCorrélation : {correlation:.2f}',
+        f'Influence of {marker_labels[marker]} on cell size\nCorrelation : {correlation:.2f}',
         color='black', fontsize=12
     )
-    axes[i].set_xlabel('Intensité du marqueur', color='black')
-    axes[i].set_ylabel('Taille de la cellule', color='black')
+    axes[i].set_xlabel('Marker intensity', color='black')
+    axes[i].set_ylabel('Cell size', color='black')
 
     axes[i].tick_params(axis='x', colors='black')
     axes[i].tick_params(axis='y', colors='black')
@@ -216,14 +212,14 @@ for i, marker in enumerate(markers):
 plt.tight_layout()
 plt.show()
 ```
-## 4. Régression sur données standardisées
+## 4. Regression on standardized data
 
-Une calcule une nouvelle régression sur les données standardisées
+A new regression is calculated on the standardized data.
 
 ```python
-data = pd.read_csv("[Fichier].csv")
+data = pd.read_csv("[Fill].csv")
 
-markers = ['(marqueur 1)', '(marqueur 2)']
+markers = ['(marker 1)', '(marker 2)']
 marker_labels = {}
 colors = ['#6AB8E6', '#E67E22']
 
@@ -231,7 +227,7 @@ scaler_X = StandardScaler()
 scaler_y = StandardScaler()
 
 plt.figure(figsize=(10, 6))
-plt.title("Influence standardisée des marqueurs sur la taille des cellules", fontsize=14)
+plt.title("Standardized influence of markers on cell size", fontsize=14)
 
 for i, marker in enumerate(markers):
     X = data[marker].values.reshape(-1, 1)
@@ -249,20 +245,19 @@ for i, marker in enumerate(markers):
                 label=f'{marker_labels[marker]} (r = {correlation:.2f})')
     plt.plot(X_std, y_pred, color=colors[i], linewidth=2)
 
-plt.xlabel("Intensité standardisée du marqueur")
-plt.ylabel("Taille standardisée de la cellule")
+plt.xlabel("Standardized marker intensity")
+plt.ylabel("Standardized cell size")
 plt.grid(True, linestyle='--', linewidth=0.5)
 plt.axhline(0, color='black', linewidth=0.8)
 plt.axvline(0, color='black', linewidth=0.8)
 plt.legend()
 plt.tight_layout()
-plt.savefig("influence_marker_same_graph_standardized.png", dpi=300, bbox_inches='tight', facecolor='white')
 plt.show()
 ```
 
-## 5. Piste d'amélioration
+## 5. Area for improvement
 
-Actuellement on suppose que 1 marqueurs = 1 taille alors que biologiquement on sait que la taille peut être la combinaison de plusieurs marqueurs. On pourrait utilser une régression multiple
+Currently, we assume that one marker corresponds to one size, whereas biologically we know that size can result from the combination of multiple markers. A multiple regression approach could be used.
 
 ```python
 X = data[markers]
@@ -272,7 +267,7 @@ X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 ```
 
-On utilise que Pearson qui est uniquement linéaire. On pourrait utiliser Spearman qui est plus robuste 
+We only use Pearson, which is purely linear. We could use Spearman, which is more robust.
 
 ```python
 from scipy.stats import spearmanr
